@@ -1,28 +1,33 @@
-# Week 6 - Challenge 4
+# Week 6 - Challenge 5
 
-## Calculadora WebService
+## API REST Things I already know / Lo que querais
 
-Crea una calculadora en Node en forma de web.
+Crea una API REST que se conecte a un fichero JSON, para manipular recursos de tipo _cosas que ya sé_. El JSON tendrá una sola propiedad de tipo array, donde almacenarán objetos que representarán cosas que hemos aprendido en el bootcamp.
 
-El programa debe recibir dos números por query params
-(p.e. <http://localhost:8000/calculator?a=6&b=3>), y devolver el siguiente HTML:
+La API REST debe tener los siguientes endpoints:
 
-Resultados:
+[GET] /things -> devuelve el array de cosas que ya sé
 
-6 + 3 = 9
+[GET] /things/:idThing -> devuelve una cosa que ya sé
 
-6 - 3 = 3
+[DELETE] /things/:idThing -> borra una cosa que ya sé
 
-6 \* 3 = 18
+[POST] /things -> crea una cosa que ya sé (la recibe en el body)
 
-6 / 3 = 2
+[PATCH] /things -> modifica una cosa que ya sé (la recibe en el body)
 
-Si el usuario no ha proporcionado alguno de los números o éstos no son de tipo número, la aplicación debe devolver un HTML con un mensaje de error e interrumpir la ejecución del programa con un código de error.
+Usamos express con las capas:
 
-La app debe abrirse en un puerto por defecto que esté configurado como variable de entorno, pero también se tiene que poder decir expresamente por línea de comandos en qué puerto queremos que se abra (p.e., `node . --port 4000`). Usar el paquete `commander`.
+- app
+- router
+- controller
+- repo
 
-Si la request no va a /calculator, la app debe responder con un 404.
+AÑADIMOS un front con REDUX testado
 
-## Opción extra
+- Lista de 'things'
+- Añadir 'thing'
+- Borrar 'thing'
+- Editar 'thing'
 
-Recoger los números en un formulario y recalcular los valores, utilizando SOLO vanila TS
+- Página de detalle
