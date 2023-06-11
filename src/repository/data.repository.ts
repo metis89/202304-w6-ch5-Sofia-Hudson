@@ -7,10 +7,10 @@ type Subject = {
   name: string;
 };
 
-const file= './data.json';
+const file = './data.json';
 
 export class DataRepo {
-  constructor(), {
+  constructor() {
     debug('Data Repo');
   }
 
