@@ -9,7 +9,7 @@ type Subject = {
 
 const file= './data.json';
 
-class DataRepo {
+export class DataRepo {
   constructor(), {
     debug('Data Repo');
   }
