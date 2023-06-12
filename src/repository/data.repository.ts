@@ -1,54 +1,66 @@
 import fs from 'fs/promises';
 import createDebug from 'debug';
-const debug = createDebug('W6:SampleRepo');
+import { Thing } from '../entities/thing.js';
+import { Repo } from './repo.js';
+import { HttpError } from '../types/http.error.js';
+import { createID } from '../helper/helpers.js';
 
-type Subject = {
-  id: string;
-  name: string;
-};
+const debug = createDebug('CHW:KnownThingsRepo');
 
 const file = './data.json';
 
-export class DataRepo {
+export class DataRepo implements Repo<Thing> {
   constructor() {
-    debug('Data Repo');
+    debug('Data Things Repo');
   }
 
-  async readAll() {
+  async query() {
     const stringData = await fs.readFile(file, { encoding: 'utf-8' });
-    return JSON.parse(stringData) as Subject[];
+    const data = JSON.parse(stringData) as Thing[];
+
+    return data;
   }
 
-  async readById(id: string) {
-    const stringData = await fs.readFile(file, { encoding: 'utf-8' });
-    const subjectData = JSON.parse(stringData) as Subject[];
-    return subjectData.find((item) => item.id === id);
+  async queryById(id: number | string) {
+    const data = await this.query();
+    const result = data.find((item) => item.id === id);
+    if (!result) throw new HttpError(404, 'Not found', 'Bad id for the query');
+    return result;
   }
 
-  async addSubject(subject: Subject) {
-    const stringData = await fs.readFile(file, { encoding: 'utf-8' });
-    const subjectData = JSON.parse(stringData) as Subject[];
-    const newSubjectList = JSON.stringify([...subjectData, subject]);
-    await fs.writeFile(file, newSubjectList, {
+  async create(thing: Omit<Thing, 'id'>) {
+    const data = await this.query();
+    const newThing: Thing = { ...thing, id: createID() };
+    const result = JSON.stringify([...data, newThing]);
+    await fs.writeFile(file, result, { encoding: 'utf-8' });
+    return newThing;
+  }
+
+  async update(thing: Partial<Thing>, id: number | string) {
+    const data = await this.query();
+
+    let modifiedThing: Thing = {} as Thing;
+    const result = data.map((item) => {
+      if (item.id === id) {
+        modifiedThing = { ...item, ...thing };
+        return modifiedThing;
+      }
+
+      return item;
+    });
+
+    if (!modifiedThing!.id)
+      throw new HttpError(404, 'Not found', 'Bad id for the update');
+
+    await fs.writeFile(file, JSON.stringify(result), { encoding: 'utf-8' });
+    return modifiedThing;
+  }
+
+  async deleteThing(id: number) {
+    const data = await this.query();
+    const newThingList = data.filter((item) => item.id !== id);
+    await fs.writeFile(file, JSON.stringify(newThingList), {
       encoding: 'utf-8',
     });
-  }
-
-  async update(id: string, newSubject: Subject) {
-    const stringData = await fs.readFile(file, { encoding: 'utf-8' });
-    const subjectData = JSON.parse(stringData) as Subject[];
-    const updatedList = subjectData.map((item) =>
-      item.id === id ? { ...item, ...newSubject } : item
-    );
-    const updatedFile = JSON.stringify(updatedList);
-    await fs.writeFile(file, updatedFile, { encoding: 'utf-8' });
-  }
-
-  async delete(id: string) {
-    const stringData = await fs.readFile(file, { encoding: 'utf-8' });
-    const subjectData = JSON.parse(stringData) as Subject[];
-    const updatedList = subjectData.filter((item) => item.id !== id);
-    const updatedFile = JSON.stringify(updatedList);
-    await fs.writeFile(file, updatedFile, { encoding: 'utf-8' });
   }
 }

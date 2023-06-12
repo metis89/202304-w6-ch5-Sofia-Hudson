@@ -1,4 +1,5 @@
 {
+  "name": "challange-1",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -13,7 +14,7 @@
     "test:prod": "jest --watchAll --coverage --watchAll=false --passWithNoTests"
   },
   "keywords": [],
-  "author": "Alejandro Cerezo",
+  "author": "Sofia Hudson",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.13",
