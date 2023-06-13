@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
-import { DataController } from '../controllers/constroller';
-import { DataRepo } from '../repository/data.repository';
+import { DataController } from '../controllers/controller.js';
+import { DataRepo } from '../repository/data.repository.js';
 
 const repo = new DataRepo();
 const controller = new DataController();
