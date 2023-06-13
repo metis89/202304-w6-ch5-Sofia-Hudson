@@ -9,66 +9,49 @@ describe('Given DataRepo class', () => {
 
     test('Then method query should be used', async () => {
       (fs.readFile as jest.Mock).mockResolvedValueOnce('[]');
-
       const result = await repo.query();
-
       expect(fs.readFile).toHaveBeenCalled();
       expect(result).toEqual([]);
     });
+
     test('Then method queryById should be used', async () => {
-      const mockKnownThing = [{ id: 3 }];
+      const mockHateThing = [{ id: 2 }];
       (fs.readFile as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockKnownThing)
+        JSON.stringify(mockHateThing)
       );
-
-      const result = await repo.queryById(3);
-
+      const result = await repo.queryById(2);
       expect(fs.readFile).toHaveBeenCalled();
-      expect(result).toEqual(mockKnownThing[0]);
+      expect(result).toEqual(mockHateThing[1]);
     });
+
     test('Then method create should be used', async () => {
-      const mockKnownThing = [{ thing: '' }];
+      const mockHateThing = [{ thing: '' }];
       (fs.readFile as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockKnownThing)
+        JSON.stringify(mockHateThing)
       );
-
       const result = await repo.create({ thing: '' });
-
       expect(fs.readFile).toHaveBeenCalled();
-      expect(result).toEqual(mockKnownThing[0]);
+      expect(result).toEqual(mockHateThing[0]);
     });
+
     test('Then method update should be used', async () => {
-      const mockKnownThing = [{ id: 13213, thing: '' }];
+      const mockHateThing = [{ id: '88'}];
       (fs.readFile as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockKnownThing)
+        JSON.stringify(mockHateThing)
       );
-
-      const result = await repo.update(13213, { thing: 'b' });
-
+      const result = await repo.update('88', {});
       expect(fs.readFile).toHaveBeenCalled();
-      expect(result).toEqual(mockKnownThing[0]);
-    });
-    test('Then method update should be used', async () => {
-      const mockKnownThing = [{ id: 13213, thing: '' }];
-      (fs.readFile as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockKnownThing)
-      );
+      expect(result).toEqual(mockHateThing[0]);
 
-      const result = await repo.update(31233, { thing: '' });
-
-      expect(fs.readFile).toHaveBeenCalled();
-      expect(result).toEqual(mockKnownThing[0]);
     });
+
     test('Then method delete should be used', async () => {
-      const mockKnownThing = [{}];
-      (fs.readFile as jest.Mock).mockResolvedValueOnce(
-        JSON.stringify(mockKnownThing)
-      );
-
-      const result = await repo.deleteThing(13213);
+      const mockHateThing = [{ id: 1 }];
+      (fs.readFile as jest.Mock).mockResolvedValueOnce(mockHateThing);
+      await repo.deleteThing(0);
 
       expect(fs.readFile).toHaveBeenCalled();
-      expect(result).toEqual(mockKnownThing[0]);
+      expect(fs.writeFile).toHaveBeenCalled();
     });
   });
 });
